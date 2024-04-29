@@ -1,4 +1,0 @@
-matplotlib==3.8.2
-matplotlib==3.8.4
-pandas==1.5.3
-tira==0.0.124
