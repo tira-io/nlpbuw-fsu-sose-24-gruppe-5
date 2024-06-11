@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from levenshtein import levenshtein_distance
+from word_similarity import word_similarity
+
 from tira.rest_api_client import Client
 from tira.third_party_integrations import get_output_directory
 
@@ -12,10 +13,11 @@ if __name__ == "__main__":
         "nlpbuw-fsu-sose-24", "paraphrase-identification-validation-20240515-training"
     ).set_index("id")
 
-    # Compute the Levenshtein distance
-    df["distance"] = levenshtein_distance(df)
-    df["label"] = (df["distance"] <= 10).astype(int)
-    df = df.drop(columns=["distance", "sentence1", "sentence2"]).reset_index()
+    # Compute the similarity
+    THRESHOLD = 0.464
+    df["similarity"] = word_similarity(df)
+    df["label"] = (df["similarity"] > THRESHOLD).astype(int)
+    df = df.drop(columns=["similarity", "sentence1", "sentence2"]).reset_index()
 
     # Save the predictions
     output_directory = get_output_directory(str(Path(__file__).parent))
